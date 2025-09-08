@@ -1,0 +1,47 @@
+<div class="card py-2">
+    <div class="card-header">
+        <ul class="nav nav-pills card-header-pills">
+            <li class="nav-item me-2" *ngIf="!connected">
+                <input [(ngModel)]="message.username" class="form-control" placeholder="Nombre usuario">
+            </li>
+            <li class="nav-item" *ngIf="!connected">
+                <button class="btn btn-success" type="button" [disabled]="!message.username" (click)="connect()">Conectar</button>
+            </li>
+            <li class="nav-item" *ngIf="connected">
+                <button class="btn btn-warning" type="button" (click)="deconnect()">Desconectar</button>
+
+            </li>
+        </ul>
+    </div>
+    <div class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="connected">
+        <ul class="list-group-list list-group-flush">
+            <li class="list-group-item list-group-item-light" *ngFor="let message of messages">
+                @if (message.type == 'NEW_USER') {
+                    {{message.date | date: 'shortTime'}}: {{message.text}} <span [ngStyle]="{'color':message.color}">&#64;{{message.username}}</span>
+                }@else if(message.type == 'MESSAGE'){
+                    {{message.date | date: 'shortTime'}}: <span [ngStyle]="{'color':message.color}">&#64;{{message.username}}</span> dice:<br>{{message.text}} 
+
+                }
+            </li>
+        </ul>
+    
+        
+    </div>
+    <div class="card-footer" *ngIf="connected">
+        <form (ngSubmit)="onSendMessage()">
+            <div class="row">
+                <div class="col">
+                    <input class="form-control"
+                        name="text" 
+                        [(ngModel)]="message.text"
+                        placeholder="Escribe un mensaje..."
+                        (keyup)="onWritingEvent()"/>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                </div>
+            </div>
+        </form>
+        <div>{{ writing }}</div>
+    </div>
+</div>
